@@ -2,8 +2,39 @@
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  canvas.width = 400;
-  canvas.height = 800;
+  const CANVAS_MIN_WIDTH = 240;
+  const CANVAS_MAX_WIDTH = 430;
+  const CANVAS_ASPECT_RATIO = 16 / 9;
+  const SCREEN_HORIZONTAL_PADDING = 16;
+  const SCREEN_VERTICAL_GAP = 24;
+
+  function fitCanvasToPortraitScreen() {
+    const hud = document.getElementById("hud");
+    const hudHeight = hud ? hud.offsetHeight : 0;
+
+    const availableWidth = Math.max(
+      CANVAS_MIN_WIDTH,
+      Math.floor(window.innerWidth - SCREEN_HORIZONTAL_PADDING)
+    );
+    const availableHeight = Math.max(
+      Math.floor(CANVAS_MIN_WIDTH * CANVAS_ASPECT_RATIO),
+      Math.floor(window.innerHeight - hudHeight - SCREEN_VERTICAL_GAP)
+    );
+
+    const widthFromHeight = Math.floor(availableHeight / CANVAS_ASPECT_RATIO);
+    const targetWidth = Math.max(
+      CANVAS_MIN_WIDTH,
+      Math.min(CANVAS_MAX_WIDTH, availableWidth, widthFromHeight)
+    );
+    const targetHeight = Math.floor(targetWidth * CANVAS_ASPECT_RATIO);
+
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    canvas.style.width = `${targetWidth}px`;
+    canvas.style.height = `${targetHeight}px`;
+  }
+
+  fitCanvasToPortraitScreen();
 
   function loadSavedData() {
     return {};
@@ -98,6 +129,33 @@
     lastTimestamp: 0,
     currentUpgradeChoices: []
   };
+
+  function resizeCanvas() {
+    const previousWidth = canvas.width;
+    const previousHeight = canvas.height;
+
+    fitCanvasToPortraitScreen();
+
+    if (previousWidth > 0 && previousHeight > 0) {
+      const ratioX = canvas.width / previousWidth;
+      const ratioY = canvas.height / previousHeight;
+
+      player.x = Math.min(canvas.width, Math.max(0, player.x * ratioX));
+      player.y = Math.min(canvas.height, Math.max(0, player.y * ratioY));
+    }
+
+    state.joystick.baseX = Math.floor(canvas.width * 0.5);
+    state.joystick.baseY = Math.min(canvas.height - 55, Math.floor(canvas.height * 0.9));
+    state.joystick.radius = Math.max(42, Math.floor(canvas.width * 0.12));
+
+    if (!state.joystick.active) {
+      state.joystick.stickX = state.joystick.baseX;
+      state.joystick.stickY = state.joystick.baseY;
+    }
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
 
   window.GameState = { canvas, ctx, player, state, getWeaponBaseCooldown };
 })();
