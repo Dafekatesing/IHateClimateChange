@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>I hate climate change</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="hud">
+  <h1 id="gameTitle">나는 환경오염이 싫어요</h1>
+
+  <div id="ui">
+    <div class="statCard">
+      <span class="label">레벨</span>
+      <span id="level" class="value">1</span>
+    </div>
+    <div class="statCard">
+      <span class="label">경험치</span>
+      <span id="xp" class="value">0</span>
+    </div>
+    <div class="statCard">
+      <span class="label">HP</span>
+      <span id="hp" class="value">10</span>
+    </div>
+    <div class="statCard">
+      <span class="label">웨이브</span>
+      <span id="wave" class="value">0</span>
+    </div>
+  </div>
+
+  <div id="weaponsPanel">
+    <h2>획득 무기</h2>
+    <ul id="weaponList"></ul>
+  </div>
+
+  <div id="waveProgressPanel">
+    <div id="waveProgressHeader">
+      <span>웨이브 진행도</span>
+      <span id="waveProgressText">0%</span>
+    </div>
+    <div id="waveProgressContainer">
+      <div id="waveProgress"></div>
+    </div>
+  </div>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<div id="upgradeMenu" class="hidden">
+  <h2>업그레이드 선택</h2>
+  <div id="upgradeOptions"></div>
+</div>
+
+<div id="gameOver" class="hidden">
+  <h2>게임 오버</h2>
+  <button id="restartBtn">재시작</button>
+</div>
+
+<script src="gameState.js" defer></script>
+<script src="player.js" defer></script>
+<script src="enemies.js" defer></script>
+<script src="movement.js" defer></script>
+<script src="weapons.js" defer></script>
+<script src="rendering.js" defer></script>
+<script src="script.js" defer></script>
+</body>
+</html>
